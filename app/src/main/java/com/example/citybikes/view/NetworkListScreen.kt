@@ -31,6 +31,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import java.util.Locale
@@ -45,22 +51,53 @@ fun countryCodeToCountryName(countryCode: String): String {
 fun NetworkListScreen(viewModel: NetworkVM) {
 
     val assets = viewModel.assets
+    var searchText by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         viewModel.fetchAssets()
     }
 
-    LazyColumn (
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.onBackground)
-    ) {
+            .background(MaterialTheme.colorScheme.onBackground),
+    ){
+        OutlinedTextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            textStyle = TextStyle(
+                color = Color.White,
+                fontSize = 16.sp
+            ),
+            label = {
+                Text(
+                    text="Search by Country",
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
+            }
+        )
+        LazyColumn (
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.onBackground)
+        ) {
+            val filteredAssets = assets.filter {
+                countryCodeToCountryName(it.location.country).contains(searchText, ignoreCase = true)
+            }.sortedBy {
+                countryCodeToCountryName(it.location.country)
+            }
 
-        items(assets) {currentAsset ->
-            AssetRow(asset = currentAsset)
-            Divider()
+            items(filteredAssets) { currentAsset ->
+                AssetRow(asset = currentAsset)
+                Divider()
+            }
         }
     }
+
 }
 
 @Composable
