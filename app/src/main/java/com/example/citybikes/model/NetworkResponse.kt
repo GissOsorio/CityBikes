@@ -1,14 +1,13 @@
 package com.example.citybikes.model
 
-data class Network(
+data class NetworkResponse(
     val company: List<String>?,
+    val ebikes: Boolean?,
+    val gbfs_href: String?,
     val href: String?,
     val id: String,
-    val city: String,
-    val country: String,
-    val countryId: String,
-    val latitude: Double,
-    val longitude: Double,
+    val license: License?,
+    val location: Location,
     val name: String,
     val source: String?
 )

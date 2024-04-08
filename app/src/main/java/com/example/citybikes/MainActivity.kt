@@ -14,9 +14,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.citybikes.view.NetworkListScreen
 import com.example.citybikes.viewModel.NetworkVM
 import com.example.citybikes.ui.theme.CityBikesTheme
+import com.example.citybikes.view.MainScreen
+import com.example.citybikes.viewModel.NetworkHrefVM
 
 class MainActivity : ComponentActivity() {
     private val networkViewModel: NetworkVM by viewModels()
+    private val networkHrefViewModel: NetworkHrefVM by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NetworkListScreen(networkViewModel)
+                    MainScreen(assetsHrefViewModel = networkHrefViewModel , assetsViewModel = networkViewModel)
                 }
             }
         }

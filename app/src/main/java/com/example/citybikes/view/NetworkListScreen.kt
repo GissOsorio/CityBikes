@@ -1,6 +1,7 @@
 package com.example.citybikes.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,17 +39,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import java.util.Locale
 
 
-fun countryCodeToCountryName(countryCode: String): String {
-    val locale = Locale("es", countryCode)
-    return locale.displayCountry
-}
-
 @Composable
-fun NetworkListScreen(viewModel: NetworkVM) {
+fun NetworkListScreen(viewModel: NetworkVM, navHostController: NavHostController) {
 
     val assets = viewModel.assets
     var searchText by remember { mutableStateOf("") }
@@ -86,13 +83,13 @@ fun NetworkListScreen(viewModel: NetworkVM) {
                 .background(MaterialTheme.colorScheme.onBackground)
         ) {
             val filteredAssets = assets.filter {
-                countryCodeToCountryName(it.location.country).contains(searchText, ignoreCase = true)
-            }.sortedBy {
-                countryCodeToCountryName(it.location.country)
+                it.country.contains(searchText, ignoreCase = true)
             }
 
             items(filteredAssets) { currentAsset ->
-                AssetRow(asset = currentAsset)
+                AssetRow(asset = currentAsset) { assetId ->
+                    navHostController.navigate("${BottomNavItem.Home.route}/$assetId")
+                }
                 Divider()
             }
         }
@@ -101,12 +98,14 @@ fun NetworkListScreen(viewModel: NetworkVM) {
 }
 
 @Composable
-fun AssetRow(asset: Network) {
+fun AssetRow(asset: Network, onClick:(String) -> Unit) {
 
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp)
+            .clickable { onClick(asset.id) }
     ) {
         Box(
             modifier = Modifier
@@ -123,7 +122,7 @@ fun AssetRow(asset: Network) {
                 )
             } else {
                 AsyncImage(
-                    model = "https://flagcdn.com/48x36/${asset.location.country.lowercase()}.png",
+                    model = "https://flagcdn.com/48x36/${asset.countryId.lowercase()}.png",
                     contentDescription = null,
                     modifier = Modifier
                         .size(40.dp)
@@ -132,13 +131,13 @@ fun AssetRow(asset: Network) {
         }
         Column {
             Text(
-                text = countryCodeToCountryName(asset.location.country),
+                text = asset.country,
                 fontSize = 16.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = asset.location.city,
+                text = asset.city,
                 fontSize = 16.sp,
                 color = Color.White
             )
@@ -154,12 +153,12 @@ fun AssetRow(asset: Network) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewNetworkListScreen() {
-
-    CityBikesTheme {
-        val viewModel: NetworkVM = viewModel()
-        NetworkListScreen(viewModel)
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewNetworkListScreen() {
+//
+//    CityBikesTheme {
+//        val viewModel: NetworkVM = viewModel()
+//        NetworkListScreen(viewModel)
+//    }
+//}
