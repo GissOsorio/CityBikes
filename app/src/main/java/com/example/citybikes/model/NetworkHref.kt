@@ -6,6 +6,7 @@ data class NetworkHref(
     val id: String,
     val city: String,
     val country: String,
+    val countryId: String,
     val name: String,
     val stations: List<Station>,
 )
