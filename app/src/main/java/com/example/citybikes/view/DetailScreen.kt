@@ -178,7 +178,6 @@ fun AssetRow(asset: Station) {
             text = asset.free_bikes.toString(),
             fontSize = 16.sp,
             color = Color.White
-            vert
         )
     }
 }
