@@ -90,7 +90,9 @@ fun DetailScreen(viewModel: NetworkHrefVM, assetId: String, navController: NavHo
                     stationTitle()
                     LazyColumn {
                         items(asset.stations) {currentAsset ->
-                            AssetRow(asset = currentAsset)
+                            AssetRow(asset = currentAsset) { assetLatitude, assetLongitude ->
+                                navController.navigate("${BottomNavItem.Home.route}/$assetLatitude/$assetLongitude")
+                            }
                             Divider()
                         }
                     }
@@ -158,13 +160,14 @@ fun AssetCard(asset: NetworkHref) {
 }
 
 @Composable
-fun AssetRow(asset: Station) {
+fun AssetRow(asset: Station, onClick:(Double,Double) -> Unit) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp)
+            .clickable { onClick(asset.longitude,asset.latitude) }
     ) {
 
         Text(
