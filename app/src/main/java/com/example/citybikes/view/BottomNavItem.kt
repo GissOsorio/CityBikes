@@ -3,9 +3,11 @@ package com.example.citybikes.view
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -25,9 +27,9 @@ sealed class BottomNavItem(
 
     data object Favourites: BottomNavItem(
         route = "favourites",
-        unselectedIcon = Icons.Outlined.Star,
-        selectedIcon = Icons.Filled.Star,
-        title = "Favourites"
+        unselectedIcon = Icons.Outlined.LocationOn,
+        selectedIcon = Icons.Filled.LocationOn,
+        title = "My Location"
     )
 
     data object Profile: BottomNavItem(

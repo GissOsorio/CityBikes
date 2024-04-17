@@ -1,25 +1,18 @@
 package com.example.citybikes.view
 
+import android.location.Location
 import android.annotation.SuppressLint
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,8 +23,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import com.example.citybikes.service.LocationService
 import com.example.citybikes.viewModel.NetworkHrefVM
 import com.example.citybikes.viewModel.NetworkVM
 
@@ -44,22 +39,6 @@ fun HomeScreen(viewModel: NetworkVM, navController: NavHostController) {
             .fillMaxSize()
     ) {
         NetworkListScreen(viewModel, navController)
-    }
-}
-
-@Composable
-fun FavouritesScreen() {
-    var text by rememberSaveable { mutableStateOf("Hello") }
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Text("$text Favourites Screen")
-        Button(onClick = { text = "Bye" }) {
-            Text("Change text")
-        }
     }
 }
 
@@ -81,7 +60,7 @@ fun NavigationGraph(assetsHrefViewModel: NetworkHrefVM,assetsViewModel: NetworkV
     val assetIdKey = "assetId"
     NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
         composable(BottomNavItem.Home.route) { HomeScreen(assetsViewModel, navController) }
-        composable(BottomNavItem.Favourites.route) { FavouritesScreen() }
+        composable(BottomNavItem.Favourites.route) { myLocationScreen() }
         composable(BottomNavItem.Profile.route) { ProfileScreen() }
         composable("${BottomNavItem.Home.route}/{$assetIdKey}") {backStackEntry ->
             DetailScreen( assetsHrefViewModel,
