@@ -51,8 +51,8 @@ fun ProfileScreen() {
 @Composable
 fun NavigationGraph(assetsHrefViewModel: NetworkHrefVM,assetsViewModel: NetworkVM, navController: NavHostController) {
     val assetIdKey = "assetId"
-    val assetLongitudeKey = "assetLongitude"
-    val assetLatitudeKey = "assetLatitude"
+    val longitudeKey = "longitudeKey"
+    val latitudeKey = "latitudeKey"
     NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
         composable(BottomNavItem.Home.route) { HomeScreen(assetsViewModel, navController) }
         composable(BottomNavItem.Favourites.route) { MyLocationScreen() }
@@ -63,14 +63,10 @@ fun NavigationGraph(assetsHrefViewModel: NetworkHrefVM,assetsViewModel: NetworkV
                 navController
             )
         }
-        composable("${BottomNavItem.Home.route}/{$assetLongitudeKey}/{$assetLatitudeKey}") { backStackEntry ->
-            val assetLongitude = backStackEntry.arguments?.getDouble(assetLongitudeKey) ?: 0.0
-            val assetLatitude = backStackEntry.arguments?.getDouble(assetLatitudeKey) ?: 0.0
-
-            StationLocationScreen(
-                assetLongitude = assetLongitude,
-                assetLatitude = assetLatitude
-            )
+        composable("${BottomNavItem.Home.route}/{$longitudeKey}/{$latitudeKey}") { backStackEntry ->
+            val assetLongitude = backStackEntry.arguments?.getString(longitudeKey) ?: "missing asset"
+            val assetLatitude = backStackEntry.arguments?.getString(latitudeKey) ?: "missing asset"
+            StationLocationScreen(assetLongitude, assetLatitude)
         }
     }
 }

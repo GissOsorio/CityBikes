@@ -77,7 +77,7 @@ fun DetailScreen(viewModel: NetworkHrefVM, assetId: String, navController: NavHo
                 .padding(innerPaddings)
                 .background(MaterialTheme.colorScheme.onBackground),
         ) {
-            if (asset != null) {
+            asset?.let { asset ->
                 Column (
                     modifier = Modifier
                         .fillMaxSize()
@@ -89,13 +89,16 @@ fun DetailScreen(viewModel: NetworkHrefVM, assetId: String, navController: NavHo
                     Spacer(modifier = Modifier.weight(0.1f))
                     stationTitle()
                     LazyColumn {
-                        items(asset.stations) {currentAsset ->
-                            AssetRow(asset = currentAsset) { assetLatitude, assetLongitude ->
-                                navController.navigate("${BottomNavItem.Home.route}/$assetLatitude/$assetLongitude")
+                        items(asset.stations) { currentStation ->
+                            AssetRowStation(station = currentStation) { station ->
+                                val longitude = station.longitude.toString()
+                                val latitude = station.latitude.toString()
+                                navController.navigate("${BottomNavItem.Home.route}/${longitude}/${latitude}")
                             }
                             Divider()
                         }
                     }
+
                 }
             }
         }
@@ -160,27 +163,39 @@ fun AssetCard(asset: NetworkHref) {
 }
 
 @Composable
-fun AssetRow(asset: Station, onClick:(Double,Double) -> Unit) {
-
+fun AssetRowStation(station: Station, onClick:(Station) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp)
-            .clickable { onClick(asset.longitude,asset.latitude) }
+            .clickable { onClick(station) }
     ) {
-
         Text(
-            text = asset.name,
+            text = station.name,
             fontSize = 16.sp,
             color = Color.White,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = asset.free_bikes.toString(),
+            text = station.free_bikes.toString(),
             fontSize = 16.sp,
             color = Color.White
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = station.longitude.toString(),
+            fontSize = 16.sp,
+            color = Color.White,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = station.latitude.toString(),
+            fontSize = 16.sp,
+            color = Color.White,
+            fontWeight = FontWeight.Bold
         )
     }
 }
