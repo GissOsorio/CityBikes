@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.citybikes.model.NetworkHref
 import com.example.citybikes.model.NetworkHrefResponse
 import com.example.citybikes.model.NetworkX
+import com.example.citybikes.model.Station
 import com.example.citybikes.repository.NetworkHrefRepo
 import kotlinx.coroutines.launch
 import java.util.Locale

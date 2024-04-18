@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import com.example.citybikes.repository.NetworkRepo
 import java.util.Locale
+import kotlin.math.*
 
 class NetworkVM: ViewModel() {
     private val assetsRepository = NetworkRepo()
@@ -49,8 +50,34 @@ class NetworkVM: ViewModel() {
             }
         }
     }
-    fun countryCodeToCountryName(countryCode: String): String {
+    private fun countryCodeToCountryName(countryCode: String): String {
         val locale = Locale("es", countryCode)
         return locale.displayCountry
+    }
+
+    fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val radius = 6371 // Radio de la Tierra en kilómetros
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+        val a = sin(dLat / 2) * sin(dLat / 2) +
+                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
+                sin(dLon / 2) * sin(dLon / 2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        return radius * c
+    }
+
+    fun findNearestAssetToLocation(latitude: Double, longitude: Double): Network? {
+        var nearestAsset: Network? = null
+        var minDistance = Double.MAX_VALUE
+
+        for (asset in assets) {
+            val distance = calculateDistance(latitude, longitude, asset.latitude, asset.longitude)
+            if (distance < minDistance) {
+                minDistance = distance
+                nearestAsset = asset
+            }
+        }
+
+        return nearestAsset
     }
 }

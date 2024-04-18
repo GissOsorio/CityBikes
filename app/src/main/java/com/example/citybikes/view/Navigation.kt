@@ -1,12 +1,15 @@
 package com.example.citybikes.view
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,6 +23,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.citybikes.viewModel.NetworkHrefVM
 import com.example.citybikes.viewModel.NetworkVM
 
@@ -41,8 +49,24 @@ fun ProfileScreen() {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.onBackground),
     ) {
-        Text("Profile Screen")
+        Column {
+            Text(
+                text = "Welcome to World City Bikes!",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 30.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "We are a passionate team dedicated to promoting a healthy and sustainable lifestyle through the use of shared bicycles worldwide. Our application provides you with detailed information about shared bicycle stations in cities around the world, allowing you to plan your trips conveniently and efficiently.",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 30.sp,
+                color = Color.White,
+            )
+        }
+
     }
 }
 
@@ -55,7 +79,7 @@ fun NavigationGraph(assetsHrefViewModel: NetworkHrefVM,assetsViewModel: NetworkV
     val latitudeKey = "latitudeKey"
     NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
         composable(BottomNavItem.Home.route) { HomeScreen(assetsViewModel, navController) }
-        composable(BottomNavItem.Favourites.route) { MyLocationScreen(navController) }
+        composable(BottomNavItem.Favourites.route) { MyLocationScreen(navController, assetsViewModel) }
         composable(BottomNavItem.Profile.route) { ProfileScreen() }
         composable("${BottomNavItem.Home.route}/{$assetIdKey}") {backStackEntry ->
             DetailScreen( assetsHrefViewModel,
