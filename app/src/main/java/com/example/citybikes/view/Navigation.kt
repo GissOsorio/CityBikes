@@ -55,7 +55,7 @@ fun NavigationGraph(assetsHrefViewModel: NetworkHrefVM,assetsViewModel: NetworkV
     val latitudeKey = "latitudeKey"
     NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
         composable(BottomNavItem.Home.route) { HomeScreen(assetsViewModel, navController) }
-        composable(BottomNavItem.Favourites.route) { MyLocationScreen() }
+        composable(BottomNavItem.Favourites.route) { MyLocationScreen(navController) }
         composable(BottomNavItem.Profile.route) { ProfileScreen() }
         composable("${BottomNavItem.Home.route}/{$assetIdKey}") {backStackEntry ->
             DetailScreen( assetsHrefViewModel,
@@ -66,7 +66,7 @@ fun NavigationGraph(assetsHrefViewModel: NetworkHrefVM,assetsViewModel: NetworkV
         composable("${BottomNavItem.Home.route}/{$longitudeKey}/{$latitudeKey}") { backStackEntry ->
             val assetLongitude = backStackEntry.arguments?.getString(longitudeKey) ?: "missing asset"
             val assetLatitude = backStackEntry.arguments?.getString(latitudeKey) ?: "missing asset"
-            StationLocationScreen(assetLongitude, assetLatitude)
+            StationLocationScreen(assetLongitude, assetLatitude,navController)
         }
     }
 }

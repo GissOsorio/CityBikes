@@ -86,7 +86,6 @@ fun DetailScreen(viewModel: NetworkHrefVM, assetId: String, navController: NavHo
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
                     AssetCard(asset)
-                    Spacer(modifier = Modifier.weight(0.1f))
                     stationTitle()
                     LazyColumn {
                         items(asset.stations) { currentStation ->
@@ -118,42 +117,48 @@ fun AssetCard(asset: NetworkHref) {
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Column (
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Row {
-                    if ( LocalInspectionMode.current) {
-                        Icon(
-                            imageVector = Icons.Filled.AccountCircle,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier
-                                .size(width = 108.dp, height = 81.dp)
-                        )
-                    } else {
-                        AsyncImage(
-                            model = "https://flagcdn.com/108x81/${asset.countryId.lowercase()}.png",
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(width = 108.dp, height = 81.dp)
-                        )
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Row {
+                        if ( LocalInspectionMode.current) {
+                            Icon(
+                                imageVector = Icons.Filled.AccountCircle,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier
+                                    .size(width = 108.dp, height = 81.dp)
+                            )
+                        } else {
+                            AsyncImage(
+                                model = "https://flagcdn.com/108x81/${asset.countryId.lowercase()}.png",
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(width = 108.dp, height = 81.dp)
+                            )
+                        }
                     }
+                    Text(
+                        text = asset.city + " - " + asset.country,
+                        modifier = Modifier.padding(16.dp),
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = asset.name,
+                        modifier = Modifier.padding(16.dp),
+                        textAlign = TextAlign.Center,
+                        fontSize = 30.sp,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-                Text(
-                    text = asset.city + " - " + asset.country,
-                    modifier = Modifier.padding(16.dp),
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp,
-                    color = Color.Black
-                )
-                Text(
-                    text = asset.name,
-                    modifier = Modifier.padding(16.dp),
-                    textAlign = TextAlign.Center,
-                    fontSize = 30.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
-                )
+
             }
         }
     }
@@ -171,6 +176,7 @@ fun AssetRowStation(station: Station, onClick:(Station) -> Unit) {
             .padding(vertical = 10.dp)
             .clickable { onClick(station) }
     ) {
+
         Text(
             text = station.name,
             fontSize = 16.sp,
@@ -178,25 +184,15 @@ fun AssetRowStation(station: Station, onClick:(Station) -> Unit) {
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = station.free_bikes.toString(),
-            fontSize = 16.sp,
-            color = Color.White
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = station.longitude.toString(),
-            fontSize = 16.sp,
-            color = Color.White,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = station.latitude.toString(),
-            fontSize = 16.sp,
-            color = Color.White,
-            fontWeight = FontWeight.Bold
-        )
+        Box(
+            modifier = Modifier.padding(end = 8.dp)
+        ) {
+            Text(
+                text = station.free_bikes.toString(),
+                fontSize = 16.sp,
+                color = Color.White
+            )
+        }
     }
 }
 
